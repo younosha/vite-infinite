@@ -2,8 +2,8 @@ import './App.css'
 import { useEffect } from 'react';
 import { useInfiniteQuery } from 'react-query';
 import { Card } from './components/Card/Card';
-import CircularProgress from '@mui/material/CircularProgress';
 import { getPersons } from './services/starWarsService';
+import { Loader } from './components/Loader/Loader';
 
 export type Person = {
   name: string;
@@ -22,10 +22,8 @@ function App() {
 
   useEffect(() => {
     let fetching = false;
-    const onScroll = async (event: any) => {
-      const { scrollHeight, scrollTop, clientHeight } =
-        event.target.scrollingElement;
-
+    const onScroll = async () => {
+      const { scrollHeight, scrollTop, clientHeight } = document.documentElement;
       if (!fetching && scrollHeight - scrollTop <= clientHeight * 1.2) {
         fetching = true;
         if (hasNextPage) await fetchNextPage();
@@ -47,7 +45,7 @@ function App() {
           return page.results.map((person:Person) => <Card key={person.name} person={person} />)
         })}
       </div>
-      {isFetchingNextPage && <div className='loader'><CircularProgress className='loader' color="secondary" /></div>}
+      {isFetchingNextPage && <Loader/>}
     </>
   )
 }
